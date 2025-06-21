@@ -1,7 +1,4 @@
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-
-import { MessageIcon, SupabaseIcon, VercelIcon } from './icons';
 
 export const Overview = () => {
   return (
@@ -13,57 +10,26 @@ export const Overview = () => {
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ delay: 0.5 }}
     >
-      <div className="rounded-xl p-6 flex flex-col gap-8 leading-relaxed text-center max-w-xl">
-        <p className="flex flex-row justify-center gap-4 items-center">
-          <VercelIcon size={32} />
-          <span>+</span>
-          <SupabaseIcon />
-          <span>+</span>
-          <MessageIcon size={32} />
+      <div className="p-12 flex flex-col gap-3 leading-relaxed text-center max-w-xl">
+        <p className="flex flex-row justify-center items-center text-s">
+          You're odering from
         </p>
-        <p>
-          This is an{' '}
-          <Link
-            className="font-medium underline underline-offset-4"
-            href="https://github.com/vercel/ai-chatbot"
-            target="_blank"
-          >
-            open source
-          </Link>{' '}
-          chatbot template built with Next.js, the AI SDK by Vercel, and
-          Supabase. It uses the{' '}
-          <code className="rounded-md bg-muted px-1 py-0.5">streamText</code>{' '}
-          function in the server and the{' '}
-          <code className="rounded-md bg-muted px-1 py-0.5">useChat</code> hook
-          on the client to create a seamless chat experience, with{' '}
-          <Link
-            className="font-medium underline underline-offset-4"
-            href="https://supabase.com"
-            target="_blank"
-          >
-            Supabase
-          </Link>{' '}
-          providing real-time data storage and authentication.
+        <p className="flex flex-row justify-center items-center font-bold text-2xl">
+          mealpreps
         </p>
-        <p>
-          Learn more about the{' '}
-          <Link
-            className="font-medium underline underline-offset-4"
-            href="https://sdk.vercel.ai/docs"
-            target="_blank"
-          >
-            AI SDK
-          </Link>{' '}
-          and{' '}
-          <Link
-            className="font-medium underline underline-offset-4"
-            href="https://supabase.com/docs"
-            target="_blank"
-          >
-            Supabase
-          </Link>{' '}
-          in their respective documentation.
+        <p className="mb-12 flex flex-row justify-center items-center text-xs italic">
+          Homemade, low-calorie meals from around the world, right at your doorstep.
         </p>
+        <p className="mb-5 flex flex-row justify-center items-center text-s">
+          I'm a smart agent ready to help you place an order. I can answer
+          any question about the menu, make modifications, keep track
+          of your order and help you process final details like delivery
+          instructions and payment.
+        </p>
+        <p className="flex flex-row justify-center items-center text-s">
+            Would you like me to suggest some recent popular options or do
+            you have something in mind?
+          </p>
       </div>
     </motion.div>
   );
