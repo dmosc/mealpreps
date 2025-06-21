@@ -42,30 +42,15 @@ export const PreviewMessage = ({
           'group-data-[role=user]/message:bg-primary group-data-[role=user]/message:text-primary-foreground flex gap-4 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl'
         )}
       >
-        {message.role === 'assistant' && (
+        {message.role === 'assistant' && !message.toolInvocations && (
           <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border">
             <SparklesIcon size={14} />
           </div>
         )}
-
         <div className="flex flex-col gap-2 w-full">
-          {(message.toolInvocations === undefined || message.toolInvocations.length === 0) && (
-            <div className="prose dark:prose-invert group-data-[role=user]/message:text-primary-foreground">
-              <Markdown>{message.content}</Markdown>
-            </div>
-          )}
-          {message.toolInvocations && message.toolInvocations.length > 0 && (
-            <div className="flex flex-col gap-4">
-              {message.toolInvocations.map((toolInvocation) => {
-                const { toolName, toolCallId, state, args } = toolInvocation;
-                if (state === 'result') {
-                  const { result } = toolInvocation;
-                  return <Markdown key={toolCallId}>{result}</Markdown>;
-                }
-              })}
-            </div>
-          )}
-
+          <div className="prose dark:prose-invert group-data-[role=user]/message:text-primary-foreground">
+            <Markdown>{message.content}</Markdown>
+          </div>
           <MessageActions
             key={`action-${message.id}`}
             chatId={chatId}
