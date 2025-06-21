@@ -26,6 +26,8 @@ import {
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from '@/lib/utils';
+import { menuQueryTool } from '@/ai/tools';
+import { createClient as createSupabaseClient } from '@/lib/supabase/client';
 
 import { generateTitleFromUserMessage } from '../../actions';
 
@@ -35,7 +37,8 @@ type AllowedTools =
   | 'createDocument'
   | 'updateDocument'
   | 'requestSuggestions'
-  | 'getWeather';
+  | 'getWeather'
+  | 'menuQuery';
 
 const blocksTools: AllowedTools[] = [
   'createDocument',
@@ -45,7 +48,9 @@ const blocksTools: AllowedTools[] = [
 
 const weatherTools: AllowedTools[] = ['getWeather'];
 
-const allTools: AllowedTools[] = [...blocksTools, ...weatherTools];
+const menuTools: AllowedTools[] = ['menuQuery'];
+
+const allTools: AllowedTools[] = [...blocksTools, ...weatherTools, ...menuTools];
 
 async function getUser() {
   const supabase = await createClient();
@@ -162,7 +167,7 @@ export async function POST(request: Request) {
     });
 
     const streamingData = new StreamData();
-
+    const supabaseClient = createSupabaseClient();
     const result = await streamText({
       model: customModel(model.apiIdentifier),
       system: systemPrompt,
@@ -185,6 +190,7 @@ export async function POST(request: Request) {
             return weatherData;
           },
         },
+        menuQuery: menuQueryTool(),
         createDocument: {
           description: 'Create a document for a writing activity',
           parameters: z.object({

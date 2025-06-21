@@ -268,6 +268,42 @@ export type Database = {
           },
         ];
       };
+      products: {
+        Row: {
+          id: string;
+          price: number;
+          name: string;
+          description: string | null;
+          quantity: number;
+          units: string;
+          category: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          price: number;
+          name: string;
+          description?: string | null;
+          quantity?: number;
+          units: string;
+          category?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          price?: number;
+          name?: string;
+          description?: string | null;
+          quantity?: number;
+          units?: string;
+          category?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
