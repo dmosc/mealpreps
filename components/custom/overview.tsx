@@ -18,18 +18,19 @@ export const Overview = () => {
           mealpreps
         </p>
         <p className="mb-12 flex flex-row justify-center items-center text-xs italic">
-          Homemade, low-calorie meals from around the world, right at your doorstep.
+          Homemade, low-calorie meals from around the world, right at your
+          doorstep.
         </p>
         <p className="mb-5 flex flex-row justify-center items-center text-s">
-          I'm a smart agent ready to help you place an order. I can answer
-          any question about the menu, make modifications, keep track
-          of your order and help you process final details like delivery
-          instructions and payment.
+          I'm a smart agent ready to help you place an order. I can answer any
+          question about the menu, make modifications, keep track of your order
+          and help you process final details like delivery instructions and
+          payment.
         </p>
         <p className="flex flex-row justify-center items-center text-s">
-            Would you like me to suggest some recent popular options or do
-            you have something in mind?
-          </p>
+          Would you like me to suggest some recent popular options or do you
+          have something in mind?
+        </p>
       </div>
     </motion.div>
   );
