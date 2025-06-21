@@ -361,14 +361,19 @@ export async function getMenuProductsQuery(
   if (filters.minPrice) {
     query = query.gte('price', filters.minPrice);
   }
-  const allowedCategories = ['breakfast', 'entree', 'sandwich', 'flatbread', 'dessert'];
+  const allowedCategories = [
+    'breakfast',
+    'entree',
+    'sandwich',
+    'flatbread',
+    'dessert',
+  ];
   if (filters.category && allowedCategories.includes(filters.category)) {
     query = query.eq('category', filters.category);
   }
   if (filters.name) {
     query = query.ilike('name', `%${filters.name}%`);
   }
-  console.log(query);
   const { data: products, error } = await query;
   if (error) throw error;
   return products;

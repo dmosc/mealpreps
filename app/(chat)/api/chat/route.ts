@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { customModel } from '@/ai';
 import { models } from '@/ai/models';
 import { blocksPrompt, regularPrompt, systemPrompt } from '@/ai/prompts';
+import { menuQueryTool } from '@/ai/tools';
 import { getChatById, getDocumentById, getSession } from '@/db/cached-queries';
 import {
   saveChat,
@@ -19,6 +20,7 @@ import {
   saveSuggestions,
   deleteChatById,
 } from '@/db/mutations';
+import { createClient as createSupabaseClient } from '@/lib/supabase/client';
 import { createClient } from '@/lib/supabase/server';
 import { MessageRole } from '@/lib/supabase/types';
 import {
@@ -26,8 +28,6 @@ import {
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from '@/lib/utils';
-import { menuQueryTool } from '@/ai/tools';
-import { createClient as createSupabaseClient } from '@/lib/supabase/client';
 
 import { generateTitleFromUserMessage } from '../../actions';
 
@@ -50,7 +50,11 @@ const weatherTools: AllowedTools[] = ['getWeather'];
 
 const menuTools: AllowedTools[] = ['menuQuery'];
 
-const allTools: AllowedTools[] = [...blocksTools, ...weatherTools, ...menuTools];
+const allTools: AllowedTools[] = [
+  ...blocksTools,
+  ...weatherTools,
+  ...menuTools,
+];
 
 async function getUser() {
   const supabase = await createClient();

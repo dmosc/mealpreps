@@ -58,7 +58,6 @@ This template ships with OpenAI `gpt-4o` as the default. However, with the [AI S
 
 </div>
 
-
 ## Getting Started
 
 ### Quick Start Video Guide
@@ -224,4 +223,3 @@ OPENAI_API_KEY=                     # Your OpenAI API key
 5. **Deploy**
    - Click "Deploy"
    - Vercel will automatically build and deploy your application
-

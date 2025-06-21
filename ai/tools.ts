@@ -6,7 +6,8 @@ import { createClient } from '../lib/supabase/server';
 
 export const menuQueryTool = () =>
   tool({
-    description: 'Query the menu for products with filters like price, category, or name.',
+    description:
+      'Query the menu for products with filters like price, category, or name.',
     parameters: z.object({
       maxPrice: z.number().optional(),
       minPrice: z.number().optional(),
@@ -22,7 +23,7 @@ export const menuQueryTool = () =>
       return products
         .map(
           (item) =>
-            `• ${item.name} ($${item.price}): ${item.quantity} ${item.units}${item.description ? ' — ' + item.description : ''}`
+            `* ${item.name} ($${item.price}): ${item.quantity} ${item.units}${item.description ? ' — ' + item.description : ''}`
         )
         .join('\n');
     },

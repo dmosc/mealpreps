@@ -36,12 +36,16 @@ export function ShoppingCart() {
             key={item.id}
             className="gap-4 flex flex-row justify-between items-center"
           >
-            <div className="flex flex-col gap-1 items-start truncate">{item.name}</div>
+            <div className="flex flex-col gap-1 items-start truncate">
+              {item.name}
+            </div>
             <div className="text-xs text-muted-foreground">${item.price}</div>
           </DropdownMenuItem>
         ))}
         <DropdownMenuItem className="flex flex-row justify-between items-center">
-          <div className="flex flex-col gap-1 items-start font-bold">Subtotal</div>
+          <div className="flex flex-col gap-1 items-start font-bold">
+            Subtotal
+          </div>
           <div className="text-xs text-muted-foreground font-bold">
             ${sampleOrder.reduce((sum, order) => sum + order.price, 0)}
           </div>
