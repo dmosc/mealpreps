@@ -25,7 +25,7 @@ export function AppSidebar({ user }: { user: User | null }) {
 
   return (
     <Sidebar className="group-data-[side=left]:border-r-0">
-      <SidebarHeader>
+      {/* <SidebarHeader>
         <SidebarMenu>
           <div className="flex flex-row justify-between items-center">
             <div
@@ -60,7 +60,7 @@ export function AppSidebar({ user }: { user: User | null }) {
         <SidebarGroup>
           <SidebarHistory user={user ?? undefined} />
         </SidebarGroup>
-      </SidebarContent>
+      </SidebarContent> */}
       <SidebarFooter className="gap-0">
         {user && (
           <SidebarGroup>
