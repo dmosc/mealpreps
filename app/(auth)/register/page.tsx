@@ -34,7 +34,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-theme(spacing.16))] items-center justify-center py-10">
+    <div className="flex h-[calc(100vh-theme(spacing.16))] items-center justify-center py-16 px-6 md:px-0">
       <div className="w-full max-w-sm space-y-6">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Register</h1>
