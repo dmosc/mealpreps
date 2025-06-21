@@ -32,7 +32,7 @@ export const PreviewMessage = ({
 }) => {
   return (
     <motion.div
-      className="w-full mx-auto max-w-3xl px-4 group/message"
+      className="w-full mx-auto max-w-3xl group/message"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       data-role={message.role}
@@ -48,7 +48,7 @@ export const PreviewMessage = ({
           </div>
         )}
         <div className="flex flex-col gap-2 w-full">
-          <div className="prose dark:prose-invert group-data-[role=user]/message:text-primary-foreground">
+          <div className="prose dark:prose-invert group-data-[role=user]/message:text-primary-foreground text-sm">
             <Markdown>{message.content}</Markdown>
           </div>
           <MessageActions
