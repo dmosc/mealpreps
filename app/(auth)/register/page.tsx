@@ -23,9 +23,12 @@ export default function RegisterPage() {
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
 
-      await signUp(email, password);
-      toast.success('Check your email to confirm your account');
-      router.push('/login');
+      const {user} = await signUp(email, password);
+      if (!user?.email_confirmed_at) {
+        toast.success('Check your email to confirm your account');
+      } else {
+        router.push('/login');
+      }
     } catch (error: any) {
       toast.error(error.message);
     } finally {
