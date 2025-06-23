@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { customModel } from '@/ai';
 import { models } from '@/ai/models';
 import { blocksPrompt, regularPrompt, systemPrompt } from '@/ai/prompts';
-import { menuQueryTool } from '@/ai/tools';
+import { menuQueryTool, addItemToOrderTool } from '@/ai/tools';
 import { getChatById, getDocumentById, getSession } from '@/db/cached-queries';
 import {
   saveChat,
@@ -38,7 +38,8 @@ type AllowedTools =
   | 'updateDocument'
   | 'requestSuggestions'
   | 'getWeather'
-  | 'menuQuery';
+  | 'menuQuery'
+  | 'addItemToOrder';
 
 const blocksTools: AllowedTools[] = [
   'createDocument',
@@ -48,7 +49,7 @@ const blocksTools: AllowedTools[] = [
 
 const weatherTools: AllowedTools[] = ['getWeather'];
 
-const menuTools: AllowedTools[] = ['menuQuery'];
+const menuTools: AllowedTools[] = ['menuQuery', 'addItemToOrder'];
 
 const allTools: AllowedTools[] = [
   ...blocksTools,
@@ -195,6 +196,7 @@ export async function POST(request: Request) {
           },
         },
         menuQuery: menuQueryTool(),
+        addItemToOrder: addItemToOrderTool(id, user.id),
         createDocument: {
           description: 'Create a document for a writing activity',
           parameters: z.object({

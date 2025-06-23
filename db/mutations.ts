@@ -341,3 +341,81 @@ export async function deleteDocumentsByIdAfterTimestamp({
     ]
   );
 }
+
+/**
+ * Get or create an order for a chat. If an order does not exist for the chat, create it.
+ * @param chatId - The chat ID to associate with the order
+ * @param userId - The user ID placing the order
+ * @returns The order row
+ */
+export async function getOrCreateOrderForChat(chatId: string, userId: string) {
+  console.log("Connecting to database");
+  const supabase = await getSupabase();
+  // Try to find an existing order for this chat
+  const { data: existingOrder, error: findError } = await supabase
+    .from('orders')
+    .select('*')
+    .eq('chat_id', chatId)
+    .single();
+  console.log(existingOrder, findError);
+  if (findError && findError.code !== 'PGRST116') {
+    throw findError;
+  }
+  if (existingOrder) {
+    return existingOrder;
+  }
+  // Create a new order for this chat
+  const now = new Date().toISOString();
+  const { data: newOrder, error: createError } = await supabase
+    .from('orders')
+    .insert({
+      user_id: userId,
+      chat_id: chatId,
+      items: [],
+      status: 'pending',
+      created_at: now,
+      updated_at: now,
+    })
+    .select()
+    .single();
+  console.log(newOrder, createError);
+  if (createError) throw createError;
+  return newOrder;
+}
+
+/**
+ * Add an item to an order (order_items table)
+ * @param orderId - The order ID
+ * @param productId - The product ID
+ * @param quantity - Quantity of the product
+ * @param price - Price of the product
+ * @param modifications - Optional modifications (JSON)
+ * @returns The inserted order_item row
+ */
+export async function addOrderItem({
+  orderId,
+  productId,
+  quantity,
+  price,
+  modifications,
+}: {
+  orderId: string;
+  productId: string;
+  quantity: number;
+  price: number;
+  modifications?: any;
+}) {
+  const supabase = await getSupabase();
+  const now = new Date().toISOString();
+  const { data, error } = await supabase.from('order_items').insert({
+    order_id: orderId,
+    product_id: productId,
+    quantity,
+    price,
+    modifications: modifications || null,
+    created_at: now,
+    updated_at: now,
+  }).select().single();
+  if (error) throw error;
+  return data;
+}
