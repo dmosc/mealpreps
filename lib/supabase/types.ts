@@ -304,6 +304,108 @@ export type Database = {
         };
         Relationships: [];
       };
+      orders: {
+        Row: {
+          id: string;
+          user_id: string;
+          customer_name: string | null;
+          customer_email: string | null;
+          items: Json;
+          total_price: number | null;
+          status: string;
+          chat_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          customer_name?: string | null;
+          customer_email?: string | null;
+          items: Json;
+          total_price?: number | null;
+          status?: string;
+          chat_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          customer_name?: string | null;
+          customer_email?: string | null;
+          items?: Json;
+          total_price?: number | null;
+          status?: string;
+          chat_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'orders_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'orders_chat_id_fkey';
+            columns: ['chat_id'];
+            isOneToOne: true;
+            referencedRelation: 'chats';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      order_items: {
+        Row: {
+          id: string;
+          order_id: string;
+          product_id: string;
+          quantity: number;
+          price: number;
+          modifications: Json | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          order_id: string;
+          product_id: string;
+          quantity?: number;
+          price: number;
+          modifications?: Json | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          order_id?: string;
+          product_id?: string;
+          quantity?: number;
+          price?: number;
+          modifications?: Json | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'order_items_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'order_items_product_id_fkey';
+            columns: ['product_id'];
+            isOneToOne: false;
+            referencedRelation: 'products';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;

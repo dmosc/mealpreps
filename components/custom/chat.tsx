@@ -31,6 +31,20 @@ export function Chat({
 }) {
   const { mutate } = useSWRConfig();
 
+  // Fetch order data for the current chat
+  const { data: order, mutate: refetchOrder } = useSWR(
+    id ? `/api/order?chatId=${id}` : null,
+    fetcher,
+    {
+      revalidateOnFocus: true,
+      revalidateOnMount: true,
+      revalidateIfStale: true,
+      revalidateOnReconnect: true,
+       // Disable deduplication to ensure fresh fetches
+      dedupingInterval: 0,
+    }
+  );
+
   const {
     messages,
     setMessages,
@@ -46,6 +60,7 @@ export function Chat({
     initialMessages,
     onFinish: () => {
       mutate('/api/history');
+      refetchOrder({ revalidate: true });
     },
   });
 
@@ -79,7 +94,7 @@ export function Chat({
   return (
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
-        <ChatHeader selectedModelId={selectedModelId} />
+        <ChatHeader order={order} />
         <div
           ref={messagesContainerRef}
           className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-auto p-6"

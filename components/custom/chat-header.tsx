@@ -13,7 +13,7 @@ import { BetterTooltip } from '@/components/ui/tooltip';
 import { PlusIcon } from './icons';
 import { useSidebar } from '../ui/sidebar';
 
-export function ChatHeader({ selectedModelId }: { selectedModelId: string }) {
+export function ChatHeader({ order }: { order?: any }) {
   const router = useRouter();
   const { open } = useSidebar();
 
@@ -37,7 +37,7 @@ export function ChatHeader({ selectedModelId }: { selectedModelId: string }) {
       </BetterTooltip>
       {/* {(!open || windowWidth < 768) && (
       )} */}
-      <ShoppingCart />
+      <ShoppingCart order={order} />
     </header>
   );
 }

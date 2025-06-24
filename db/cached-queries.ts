@@ -16,6 +16,7 @@ import {
   getSessionQuery,
   getUserByIdQuery,
   getChatWithMessagesQuery,
+  getOrderWithItemsByChatIdQuery,
 } from '@/db/queries';
 
 const getSupabase = cache(() => createClient());
@@ -186,4 +187,9 @@ export const getChatWithMessages = async (chatId: string) => {
       revalidate: 10, // Cache for 10 seconds
     }
   )();
+};
+
+export const getOrderWithItemsByChatId = async (chatId: string) => {
+  const supabase = await getSupabase();
+  return getOrderWithItemsByChatIdQuery(supabase, { chatId });
 };

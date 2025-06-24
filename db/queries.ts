@@ -322,6 +322,71 @@ export async function getChatWithMessagesQuery(
   };
 }
 
+export async function getOrderByChatIdQuery(
+  client: Client,
+  { chatId }: { chatId: string }
+) {
+  const { data: order, error } = await client
+    .from('orders')
+    .select()
+    .eq('chat_id', chatId)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw error;
+  }
+  return order;
+}
+
+export async function getOrderItemsByOrderIdQuery(
+  client: Client,
+  { orderId }: { orderId: string }
+) {
+  const { data: orderItems, error } = await client
+    .from('order_items')
+    .select(
+      `
+      *,
+      products (
+        id,
+        name,
+        price,
+        description
+      )
+    `
+    )
+    .eq('order_id', orderId)
+    .order('created_at', { ascending: true });
+
+  if (error) throw error;
+  return orderItems;
+}
+
+export async function getOrderWithItemsByChatIdQuery(
+  client: Client,
+  { chatId }: { chatId: string }
+) {
+  // First get the order
+  const order = await getOrderByChatIdQuery(client, { chatId });
+
+  if (!order) {
+    return null;
+  }
+
+  // Then get the order items with product details
+  const orderItems = await getOrderItemsByOrderIdQuery(client, {
+    orderId: order.id,
+  });
+
+  return {
+    ...order,
+    items: orderItems || [],
+  };
+}
+
 type PostgrestError = {
   code: string;
   message: string;
