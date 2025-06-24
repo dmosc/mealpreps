@@ -40,7 +40,7 @@ export function Chat({
       revalidateOnMount: true,
       revalidateIfStale: true,
       revalidateOnReconnect: true,
-       // Disable deduplication to ensure fresh fetches
+      // Disable deduplication to ensure fresh fetches
       dedupingInterval: 0,
     }
   );

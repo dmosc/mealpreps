@@ -349,7 +349,7 @@ export async function deleteDocumentsByIdAfterTimestamp({
  * @returns The order row
  */
 export async function getOrCreateOrderForChat(chatId: string, userId: string) {
-  console.log("Connecting to database");
+  console.log('Connecting to database');
   const supabase = await getSupabase();
   // Try to find an existing order for this chat
   const { data: existingOrder, error: findError } = await supabase
@@ -407,15 +407,19 @@ export async function addOrderItem({
 }) {
   const supabase = await getSupabase();
   const now = new Date().toISOString();
-  const { data, error } = await supabase.from('order_items').insert({
-    order_id: orderId,
-    product_id: productId,
-    quantity,
-    price,
-    modifications: modifications || null,
-    created_at: now,
-    updated_at: now,
-  }).select().single();
+  const { data, error } = await supabase
+    .from('order_items')
+    .insert({
+      order_id: orderId,
+      product_id: productId,
+      quantity,
+      price,
+      modifications: modifications || null,
+      created_at: now,
+      updated_at: now,
+    })
+    .select()
+    .single();
   if (error) throw error;
   return data;
 }

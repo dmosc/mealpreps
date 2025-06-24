@@ -123,10 +123,15 @@ export function ShoppingCart({ order }: { order?: any }) {
                 const res = await fetch('/api/order', {
                   method: 'PATCH',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ orderId: order.id, status: 'submitted' }),
+                  body: JSON.stringify({
+                    orderId: order.id,
+                    status: 'submitted',
+                  }),
                 });
                 if (!res.ok) throw new Error('Failed to submit order');
-                toast.success('Order submitted! You should receive an email confirming your order.');
+                toast.success(
+                  'Order submitted! You should receive an email confirming your order.'
+                );
                 setOpen(false);
                 // Refetch order status to update UI
                 if (order.chat_id) {

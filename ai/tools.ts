@@ -37,16 +37,21 @@ export const addItemToOrderTool = (chatId: string, userId: string) =>
     parameters: z.object({
       productName: z.string().describe('The name of the product to add'),
       quantity: z.number().min(1).describe('Quantity of the product'),
-      modifications: z.any().optional().describe('Optional modifications for the item'),
+      modifications: z
+        .any()
+        .optional()
+        .describe('Optional modifications for the item'),
     }),
     execute: async ({ productName, quantity, modifications }) => {
-      console.log("Calling addItemToOrderTool");
+      console.log('Calling addItemToOrderTool');
       if (!chatId || !userId) {
         throw new Error('chatId and userId must be provided in context');
       }
       // Query the products table for a matching product name
       const client: Client = await createClient();
-      const products = await getMenuProductsQuery(client, { name: productName });
+      const products = await getMenuProductsQuery(client, {
+        name: productName,
+      });
       if (!products || products.length === 0) {
         return `No product found matching the name: ${productName}`;
       }

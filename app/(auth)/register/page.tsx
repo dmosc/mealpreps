@@ -23,7 +23,7 @@ export default function RegisterPage() {
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
 
-      const {user} = await signUp(email, password);
+      const { user } = await signUp(email, password);
       if (!user?.email_confirmed_at) {
         toast.success('Check your email to confirm your account');
       } else {
