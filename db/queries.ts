@@ -387,6 +387,39 @@ export async function getOrderWithItemsByChatIdQuery(
   };
 }
 
+export async function getOrderWithItemsByOrderIdQuery(
+  client: Client,
+  { orderId }: { orderId: string }
+) {
+  // First get the order
+  const { data: order, error: orderError } = await client
+    .from('orders')
+    .select()
+    .eq('id', orderId)
+    .single();
+
+  if (orderError) {
+    if (orderError.code === 'PGRST116') {
+      return null;
+    }
+    throw orderError;
+  }
+
+  if (!order) {
+    return null;
+  }
+
+  // Then get the order items with product details
+  const orderItems = await getOrderItemsByOrderIdQuery(client, {
+    orderId: order.id,
+  });
+
+  return {
+    ...order,
+    items: orderItems || [],
+  };
+}
+
 type PostgrestError = {
   code: string;
   message: string;
