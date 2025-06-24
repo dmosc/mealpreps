@@ -10,7 +10,7 @@ import { z } from 'zod';
 
 import { customModel } from '@/ai';
 import { models } from '@/ai/models';
-import { blocksPrompt, regularPrompt, systemPrompt } from '@/ai/prompts';
+import { systemPrompt } from '@/ai/prompts';
 import { menuQueryTool, addItemToOrderTool } from '@/ai/tools';
 import { getChatById, getDocumentById, getSession } from '@/db/cached-queries';
 import {
