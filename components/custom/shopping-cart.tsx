@@ -1,6 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
+import { useSWRConfig } from 'swr';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,6 +16,7 @@ import { InvoiceIcon } from './icons';
 
 export function ShoppingCart({ order }: { order?: any }) {
   const [open, setOpen] = useState(false);
+  const { mutate } = useSWRConfig();
 
   // Calculate subtotal from order items
   const subtotal = useMemo(() => {
@@ -92,9 +95,51 @@ export function ShoppingCart({ order }: { order?: any }) {
             ${subtotal.toFixed(2)}
           </div>
         </DropdownMenuItem>
-        <Button className="w-full mt-5" variant="destructive">
-          Submit payment
-        </Button>
+        {order.status === 'submitted' ? (
+          <div className="flex flex-col gap-2 mt-5">
+            <Button className="w-full" variant="outline" disabled>
+              Order submitted
+            </Button>
+            <Button
+              className="w-full"
+              variant="secondary"
+              onClick={() => {
+                // If a callback is provided in props, call it, otherwise redirect
+                if (typeof window !== 'undefined') {
+                  window.location.href = '/';
+                }
+              }}
+            >
+              Start a new order
+            </Button>
+          </div>
+        ) : (
+          <Button
+            className="w-full mt-5"
+            variant="destructive"
+            onClick={async () => {
+              if (!order?.id) return;
+              try {
+                const res = await fetch('/api/order', {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ orderId: order.id, status: 'submitted' }),
+                });
+                if (!res.ok) throw new Error('Failed to submit order');
+                toast.success('Order submitted! You should receive an email confirming your order.');
+                setOpen(false);
+                // Refetch order status to update UI
+                if (order.chat_id) {
+                  mutate(`/api/order?chatId=${order.chat_id}`);
+                }
+              } catch (err) {
+                toast.error('Failed to submit order. Please try again.');
+              }
+            }}
+          >
+            Submit order
+          </Button>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
