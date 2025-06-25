@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { PlusIcon } from '@/components/custom/icons';
 import { SidebarHistory } from '@/components/custom/sidebar-history';
+import { SidebarOrders } from '@/components/custom/sidebar-orders';
 import { SidebarUserNav } from '@/components/custom/sidebar-user-nav';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +26,7 @@ export function AppSidebar({ user }: { user: User | null }) {
 
   return (
     <Sidebar className="group-data-[side=left]:border-r-0">
-      {/* <SidebarHeader>
+      <SidebarHeader>
         <SidebarMenu>
           <div className="flex flex-row justify-between items-center">
             <div
@@ -58,9 +59,12 @@ export function AppSidebar({ user }: { user: User | null }) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarHistory user={user ?? undefined} />
+          <SidebarOrders user={user ?? undefined} />
         </SidebarGroup>
-      </SidebarContent> */}
+        {/* <SidebarGroup>
+          <SidebarHistory user={user ?? undefined} />
+        </SidebarGroup> */}
+      </SidebarContent>
       <SidebarFooter className="gap-0">
         {user && (
           <SidebarGroup>

@@ -18,6 +18,7 @@ import {
   getChatWithMessagesQuery,
   getOrderWithItemsByChatIdQuery,
   getOrderWithItemsByOrderIdQuery,
+  getSubmittedOrdersByUserIdQuery,
 } from '@/db/queries';
 
 const getSupabase = cache(() => createClient());
@@ -198,4 +199,9 @@ export const getOrderWithItemsByChatId = async (chatId: string) => {
 export const getOrderWithItemsByOrderId = async (orderId: string) => {
   const supabase = await getSupabase();
   return getOrderWithItemsByOrderIdQuery(supabase, { orderId });
+};
+
+export const getSubmittedOrdersByUserId = async (userId: string) => {
+  const supabase = await getSupabase();
+  return getSubmittedOrdersByUserIdQuery(supabase, { userId });
 };

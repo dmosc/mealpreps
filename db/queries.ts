@@ -476,3 +476,30 @@ export async function getMenuProductsQuery(
   if (error) throw error;
   return products;
 }
+
+export async function getSubmittedOrdersByUserIdQuery(
+  client: Client,
+  { userId }: { userId: string }
+) {
+  const { data: orders, error } = await client
+    .from('orders')
+    .select(`
+      *,
+      order_items (
+        id,
+        quantity,
+        price,
+        modifications,
+        products (
+          id,
+          name
+        )
+      )
+    `)
+    .eq('user_id', userId)
+    .eq('status', 'submitted')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return orders;
+}
