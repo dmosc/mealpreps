@@ -32,7 +32,7 @@ export function AppSidebar({ user }: { user: User | null }) {
             <div
               onClick={() => {
                 setOpenMobile(false);
-                router.push('/');
+                router.push('/chat');
                 router.refresh();
               }}
               className="flex flex-row gap-3 items-center"
@@ -47,7 +47,7 @@ export function AppSidebar({ user }: { user: User | null }) {
                 className="p-2 h-fit"
                 onClick={() => {
                   setOpenMobile(false);
-                  router.push('/');
+                  router.push('/chat');
                   router.refresh();
                 }}
               >

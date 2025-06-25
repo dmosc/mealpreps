@@ -141,7 +141,7 @@ export function GroupedChatList({
       toast.success('Chat deleted successfully');
 
       if (chatId === currentChatId) {
-        router.push('/');
+        router.push('/chat');
       }
     } catch (error) {
       console.error('Failed to delete chat:', error);

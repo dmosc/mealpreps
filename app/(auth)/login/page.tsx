@@ -24,7 +24,7 @@ export default function LoginPage() {
       const password = formData.get('password') as string;
 
       await signIn(email, password);
-      router.push('/');
+      router.push('/chat');
       router.refresh();
     } catch (error: any) {
       toast.error(error.message);

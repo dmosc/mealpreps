@@ -20,7 +20,7 @@ export default function AboutPage() {
       </p>
       <p>Thank you for choosing us.</p>
       <Link
-        href="/"
+        href="/chat"
         className="text-blue-600 underline font-semibold hover:text-blue-800 transition-colors"
       >
         Place an order.

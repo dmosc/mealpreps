@@ -149,7 +149,7 @@ export function ShoppingCart({ order }: { order?: any }) {
               variant="outline"
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  window.location.href = '/';
+                  window.location.href = '/chat';
                 }
               }}
             >
@@ -176,7 +176,7 @@ export function ShoppingCart({ order }: { order?: any }) {
               variant="outline"
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  window.location.href = '/';
+                  window.location.href = '/chat';
                 }
               }}
             >
@@ -195,7 +195,7 @@ export function ShoppingCart({ order }: { order?: any }) {
               variant="secondary"
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  window.location.href = '/';
+                  window.location.href = '/chat';
                 }
               }}
             >
