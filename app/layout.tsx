@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Toaster } from 'sonner';
 
+import { StripeProvider } from '@/components/custom/stripe-provider';
 import { ThemeProvider } from '@/components/custom/theme-provider';
 
 import './globals.css';
@@ -63,10 +64,12 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* <AuthProvider> */}
-          <Toaster position="top-center" />
-          {children}
-          {/* </AuthProvider> */}
+          <StripeProvider>
+            {/* <AuthProvider> */}
+            <Toaster position="top-center" />
+            {children}
+            {/* </AuthProvider> */}
+          </StripeProvider>
         </ThemeProvider>
       </body>
     </html>

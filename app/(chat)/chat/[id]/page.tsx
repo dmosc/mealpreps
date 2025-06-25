@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { DEFAULT_MODEL_NAME, models } from '@/ai/models';
 import { Chat as PreviewChat } from '@/components/custom/chat';
+import { PaymentStatusHandler } from '@/components/custom/payment-status-handler';
 import {
   getChatById,
   getMessagesByChatId,
@@ -40,10 +41,13 @@ export default async function Page(props: { params: Promise<any> }) {
   console.log(convertToUIMessages(messagesFromDb));
 
   return (
-    <PreviewChat
-      id={chat.id}
-      initialMessages={convertToUIMessages(messagesFromDb)}
-      selectedModelId={selectedModelId}
-    />
+    <>
+      <PaymentStatusHandler chatId={chat.id} />
+      <PreviewChat
+        id={chat.id}
+        initialMessages={convertToUIMessages(messagesFromDb)}
+        selectedModelId={selectedModelId}
+      />
+    </>
   );
 }

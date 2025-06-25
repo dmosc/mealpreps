@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { InvoiceIcon, TrashIcon } from './icons';
+import { StripeCheckout } from './stripe-checkout';
 
 export function ShoppingCart({ order }: { order?: any }) {
   const [open, setOpen] = useState(false);
@@ -104,7 +105,7 @@ export function ShoppingCart({ order }: { order?: any }) {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {order.status !== 'submitted' && (
+              {order.status === 'pending' && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -129,16 +130,24 @@ export function ShoppingCart({ order }: { order?: any }) {
             ${subtotal.toFixed(2)}
           </div>
         </div>
-        {order.status === 'submitted' ? (
+
+        {order.status === 'pending' && (
           <div className="flex flex-col gap-2 mt-5">
-            <Button className="w-full" variant="outline" disabled>
-              Order submitted
-            </Button>
+            <StripeCheckout
+              orderId={order.id}
+              chatId={order.chat_id}
+              onSuccess={() => {
+                setOpen(false);
+                mutate(`/api/order?chatId=${order.chat_id}`);
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
             <Button
               className="w-full"
-              variant="secondary"
+              variant="outline"
               onClick={() => {
-                // If a callback is provided in props, call it, otherwise redirect
                 if (typeof window !== 'undefined') {
                   window.location.href = '/';
                 }
@@ -147,37 +156,52 @@ export function ShoppingCart({ order }: { order?: any }) {
               Start a new order
             </Button>
           </div>
-        ) : (
-          <Button
-            className="w-full mt-5"
-            variant="destructive"
-            onClick={async () => {
-              if (!order?.id) return;
-              try {
-                const res = await fetch('/api/order', {
-                  method: 'PATCH',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    orderId: order.id,
-                    status: 'submitted',
-                  }),
-                });
-                if (!res.ok) throw new Error('Failed to submit order');
-                toast.success(
-                  'Order submitted! You should receive an email confirming your order.'
-                );
+        )}
+
+        {order.status === 'submitted' && (
+          <div className="flex flex-col gap-2 mt-5">
+            <StripeCheckout
+              orderId={order.id}
+              chatId={order.chat_id}
+              onSuccess={() => {
                 setOpen(false);
-                // Refetch order status to update UI
-                if (order.chat_id) {
-                  mutate(`/api/order?chatId=${order.chat_id}`);
+                mutate(`/api/order?chatId=${order.chat_id}`);
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
+            <Button
+              className="w-full"
+              variant="outline"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.href = '/';
                 }
-              } catch (err) {
-                toast.error('Failed to submit order. Please try again.');
-              }
-            }}
-          >
-            Submit order
-          </Button>
+              }}
+            >
+              Start a new order
+            </Button>
+          </div>
+        )}
+
+        {order.status === 'paid' && (
+          <div className="flex flex-col gap-2 mt-5">
+            <Button className="w-full" variant="outline" disabled>
+              Payment completed
+            </Button>
+            <Button
+              className="w-full"
+              variant="secondary"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.href = '/';
+                }
+              }}
+            >
+              Start a new order
+            </Button>
+          </div>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

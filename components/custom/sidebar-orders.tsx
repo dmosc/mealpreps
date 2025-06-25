@@ -63,7 +63,7 @@ const fetcher = async (): Promise<Order[]> => {
       `
       )
       .eq('user_id', user.id)
-      .eq('status', 'submitted')
+      .eq('status', 'paid')
       .order('created_at', { ascending: false });
 
     if (ordersError) {
@@ -127,7 +127,7 @@ export function SidebarOrders({ user }: { user: User | undefined }) {
     data: orders,
     isLoading,
     mutate,
-  } = useSWR<Order[]>(user ? ['submitted-orders', user.id] : null, fetcher, {
+  } = useSWR<Order[]>(user ? ['paid-orders', user.id] : null, fetcher, {
     fallbackData: [],
     refreshInterval: 10000, // Refresh every 10 seconds
     revalidateOnFocus: true,
@@ -145,7 +145,7 @@ export function SidebarOrders({ user }: { user: User | undefined }) {
     return (
       <SidebarGroup>
         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-          Submitted Orders
+          Paid Orders
         </div>
         <SidebarGroupContent>
           <div className="flex flex-col">
@@ -167,11 +167,11 @@ export function SidebarOrders({ user }: { user: User | undefined }) {
     return (
       <SidebarGroup>
         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-          Submitted Orders
+          Paid Orders
         </div>
         <SidebarGroupContent>
           <div className="text-zinc-500 w-full flex flex-row justify-center items-center text-sm gap-2 px-2 py-4">
-            <div>No submitted orders yet</div>
+            <div>No paid orders yet</div>
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -180,7 +180,7 @@ export function SidebarOrders({ user }: { user: User | undefined }) {
 
   return (
     <SidebarGroup>
-      <div className="mx-4 text-sm">Submitted</div>
+      <div className="mx-4 text-sm">Paid</div>
       <SidebarGroupContent>
         <SidebarMenu>
           {orders.map((order) => (
