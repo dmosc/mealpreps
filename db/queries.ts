@@ -483,7 +483,8 @@ export async function getSubmittedOrdersByUserIdQuery(
 ) {
   const { data: orders, error } = await client
     .from('orders')
-    .select(`
+    .select(
+      `
       *,
       order_items (
         id,
@@ -495,7 +496,8 @@ export async function getSubmittedOrdersByUserIdQuery(
           name
         )
       )
-    `)
+    `
+    )
     .eq('user_id', userId)
     .eq('status', 'submitted')
     .order('created_at', { ascending: false });

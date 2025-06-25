@@ -11,7 +11,11 @@ import { z } from 'zod';
 import { customModel } from '@/ai';
 import { models } from '@/ai/models';
 import { systemPrompt } from '@/ai/prompts';
-import { menuQueryTool, addItemToOrderTool, removeItemFromOrderTool } from '@/ai/tools';
+import {
+  menuQueryTool,
+  addItemToOrderTool,
+  removeItemFromOrderTool,
+} from '@/ai/tools';
 import { getChatById, getDocumentById, getSession } from '@/db/cached-queries';
 import {
   saveChat,
@@ -50,7 +54,11 @@ const blocksTools: AllowedTools[] = [
 
 const weatherTools: AllowedTools[] = ['getWeather'];
 
-const menuTools: AllowedTools[] = ['menuQuery', 'addItemToOrder', 'removeItemFromOrder'];
+const menuTools: AllowedTools[] = [
+  'menuQuery',
+  'addItemToOrder',
+  'removeItemFromOrder',
+];
 
 const allTools: AllowedTools[] = [
   ...blocksTools,

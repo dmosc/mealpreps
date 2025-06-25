@@ -438,22 +438,24 @@ export async function removeOrderItem({
   userId: string;
 }) {
   const supabase = await getSupabase();
-  
+
   // First, verify the order item belongs to the user's order
   const { data: orderItem, error: fetchError } = await supabase
     .from('order_items')
-    .select(`
+    .select(
+      `
       *,
       orders!inner(user_id)
-    `)
+    `
+    )
     .eq('id', orderItemId)
     .eq('orders.user_id', userId)
     .single();
-  
+
   if (fetchError || !orderItem) {
     throw new Error('Order item not found or unauthorized');
   }
-  
+
   // Delete the order item
   const { data, error } = await supabase
     .from('order_items')
@@ -461,7 +463,7 @@ export async function removeOrderItem({
     .eq('id', orderItemId)
     .select()
     .single();
-  
+
   if (error) throw error;
   return data;
 }

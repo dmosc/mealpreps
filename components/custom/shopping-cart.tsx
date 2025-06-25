@@ -33,11 +33,11 @@ export function ShoppingCart({ order }: { order?: any }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderItemId }),
       });
-      
+
       if (!res.ok) throw new Error('Failed to remove item');
-      
+
       toast.success('Item removed from order');
-      
+
       // Refetch order status to update UI
       if (order.chat_id) {
         mutate(`/api/order?chatId=${order.chat_id}`);
@@ -91,7 +91,10 @@ export function ShoppingCart({ order }: { order?: any }) {
           <h3 className="font-semibold text-sm">Shopping Cart</h3>
         </div>
         {order.items.map((item: any) => (
-          <div key={item.id} className="flex items-center justify-between gap-2 py-2">
+          <div
+            key={item.id}
+            className="flex items-center justify-between gap-2 py-2"
+          >
             <div className="flex flex-col gap-1 items-start truncate flex-1">
               <div className="font-medium">
                 {item.products?.name || 'Unknown Item'}
@@ -105,7 +108,7 @@ export function ShoppingCart({ order }: { order?: any }) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                  className="size-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

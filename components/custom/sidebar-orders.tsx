@@ -47,7 +47,8 @@ const fetcher = async (): Promise<Order[]> => {
 
     const { data: orders, error: ordersError } = await supabase
       .from('orders')
-      .select(`
+      .select(
+        `
         *,
         order_items (
           id,
@@ -59,7 +60,8 @@ const fetcher = async (): Promise<Order[]> => {
             name
           )
         )
-      `)
+      `
+      )
       .eq('user_id', user.id)
       .eq('status', 'submitted')
       .order('created_at', { ascending: false });
@@ -85,18 +87,28 @@ const OrderItem = ({
   isActive: boolean;
   setOpenMobile: (open: boolean) => void;
 }) => {
-  const totalItems = order.order_items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-  const totalPrice = order.order_items?.reduce((sum, item) => sum + (item.price * item.quantity), 0) || 0;
+  const totalItems =
+    order.order_items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const totalPrice =
+    order.order_items?.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    ) || 0;
   const orderDate = format(new Date(order.created_at), 'MMM d, yyyy');
 
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={isActive} className="py-8 px-3 m-2">
-        <Link href={`/chat/${order.chat_id}`} onClick={() => setOpenMobile(false)}>
+        <Link
+          href={`/chat/${order.chat_id}`}
+          onClick={() => setOpenMobile(false)}
+        >
           <div className="flex flex-col items-start gap-2">
             <div className="flex items-center gap-2">
               <InvoiceIcon size={12} />
-              <span className="text-sm font-medium">Order #{order.id.slice(-8)}</span>
+              <span className="text-sm font-medium">
+                Order #{order.id.slice(-8)}
+              </span>
             </div>
             <div className="text-xs text-muted-foreground">
               {totalItems} items • ${totalPrice.toFixed(2)} • {orderDate}
@@ -168,9 +180,7 @@ export function SidebarOrders({ user }: { user: User | undefined }) {
 
   return (
     <SidebarGroup>
-      <div className="mx-4 text-sm">
-        Submitted
-      </div>
+      <div className="mx-4 text-sm">Submitted</div>
       <SidebarGroupContent>
         <SidebarMenu>
           {orders.map((order) => (
@@ -185,4 +195,4 @@ export function SidebarOrders({ user }: { user: User | undefined }) {
       </SidebarGroupContent>
     </SidebarGroup>
   );
-} 
+}

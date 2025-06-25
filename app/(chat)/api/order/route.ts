@@ -1,6 +1,10 @@
-import { getSession, getOrderWithItemsByChatId, getOrderWithItemsByOrderId } from '@/db/cached-queries';
-import { createClient } from '@/lib/supabase/server';
+import {
+  getSession,
+  getOrderWithItemsByChatId,
+  getOrderWithItemsByOrderId,
+} from '@/db/cached-queries';
 import { sendOrderConfirmationEmail } from '@/lib/email';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -47,7 +51,7 @@ export async function PATCH(request: Request) {
         if (order && order.items && order.items.length > 0) {
           // Calculate total price
           const totalPrice = order.items.reduce((sum: number, item: any) => {
-            return sum + (item.price * item.quantity);
+            return sum + item.price * item.quantity;
           }, 0);
           // Prepare order items for email
           const orderItems = order.items.map((item: any) => ({
@@ -59,7 +63,8 @@ export async function PATCH(request: Request) {
           // Send the email
           await sendOrderConfirmationEmail({
             customerEmail: user.email,
-            customerName: user.user_metadata?.full_name || user.email.split('@')[0],
+            customerName:
+              user.user_metadata?.full_name || user.email.split('@')[0],
             orderId: order.id,
             orderItems,
             totalPrice,
@@ -82,38 +87,42 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   const { orderItemId } = await request.json();
   console.log('DELETE request received for orderItemId:', orderItemId);
-  
+
   if (!orderItemId) {
     return Response.json('Missing orderItemId', { status: 400 });
   }
   try {
     const user = await getSession();
     console.log('User session:', user?.id);
-    
+
     if (!user) {
       return Response.json('Unauthorized', { status: 401 });
     }
-    
+
     const supabase = await createClient();
-    
+
     // First, verify the order item belongs to a user's order
     console.log('Fetching order item for verification...');
     const { data: orderItem, error: fetchError } = await supabase
       .from('order_items')
-      .select(`
+      .select(
+        `
         *,
         orders!inner(user_id)
-      `)
+      `
+      )
       .eq('id', orderItemId)
       .eq('orders.user_id', user.id)
       .single();
-    
+
     console.log('Order item fetch result:', { orderItem, fetchError });
-    
+
     if (fetchError || !orderItem) {
-      return Response.json('Order item not found or unauthorized', { status: 404 });
+      return Response.json('Order item not found or unauthorized', {
+        status: 404,
+      });
     }
-    
+
     // Delete the order item
     console.log('Attempting to delete order item...');
     const { data, error: deleteError } = await supabase
@@ -121,9 +130,9 @@ export async function DELETE(request: Request) {
       .delete()
       .eq('id', orderItemId)
       .select();
-    
+
     console.log('Delete result:', { data, deleteError });
-    
+
     if (deleteError) {
       console.error('Delete error:', deleteError);
       return Response.json('Failed to remove item from order', { status: 500 });
