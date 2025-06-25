@@ -423,3 +423,45 @@ export async function addOrderItem({
   if (error) throw error;
   return data;
 }
+
+/**
+ * Remove an item from an order (order_items table)
+ * @param orderItemId - The order item ID to remove
+ * @param userId - The user ID for authorization
+ * @returns The deleted order_item row
+ */
+export async function removeOrderItem({
+  orderItemId,
+  userId,
+}: {
+  orderItemId: string;
+  userId: string;
+}) {
+  const supabase = await getSupabase();
+  
+  // First, verify the order item belongs to the user's order
+  const { data: orderItem, error: fetchError } = await supabase
+    .from('order_items')
+    .select(`
+      *,
+      orders!inner(user_id)
+    `)
+    .eq('id', orderItemId)
+    .eq('orders.user_id', userId)
+    .single();
+  
+  if (fetchError || !orderItem) {
+    throw new Error('Order item not found or unauthorized');
+  }
+  
+  // Delete the order item
+  const { data, error } = await supabase
+    .from('order_items')
+    .delete()
+    .eq('id', orderItemId)
+    .select()
+    .single();
+  
+  if (error) throw error;
+  return data;
+}

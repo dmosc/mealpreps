@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { getMenuProductsQuery } from '../db/queries';
 import type { Client } from '../lib/supabase/types';
 import { createClient } from '../lib/supabase/server';
-import { getOrCreateOrderForChat, addOrderItem } from '../db/mutations';
+import { getOrCreateOrderForChat, addOrderItem, removeOrderItem } from '../db/mutations';
 
 export const menuQueryTool = () =>
   tool({
@@ -66,5 +66,67 @@ export const addItemToOrderTool = (chatId: string, userId: string) =>
         modifications,
       });
       return `Added ${quantity} of '${product.name}' to order ${order.id} for chat ${chatId}.`;
+    },
+  });
+
+export const removeItemFromOrderTool = (chatId: string, userId: string) =>
+  tool({
+    description:
+      'Remove an item from the current order in a chat by product name. This will remove the first matching item found.',
+    parameters: z.object({
+      productName: z.string().describe('The name of the product to remove'),
+    }),
+    execute: async ({ productName }) => {
+      console.log('Calling removeItemFromOrderTool');
+      if (!chatId || !userId) {
+        throw new Error('chatId and userId must be provided in context');
+      }
+      
+      const client: Client = await createClient();
+      
+      // Get the order with items for this chat
+      const { data: order, error: orderError } = await client
+        .from('orders')
+        .select(`
+          *,
+          order_items (
+            id,
+            quantity,
+            price,
+            modifications,
+            products (
+              id,
+              name
+            )
+          )
+        `)
+        .eq('chat_id', chatId)
+        .eq('user_id', userId)
+        .single();
+      
+      if (orderError || !order) {
+        return `No order found for chat ${chatId}`;
+      }
+      
+      if (!order.order_items || order.order_items.length === 0) {
+        return `No items found in order for chat ${chatId}`;
+      }
+      
+      // Find the first matching item
+      const matchingItem = order.order_items.find(
+        (item: any) => item.products?.name?.toLowerCase().includes(productName.toLowerCase())
+      );
+      
+      if (!matchingItem) {
+        return `No item found matching the name: ${productName}`;
+      }
+      
+      // Remove the item
+      await removeOrderItem({
+        orderItemId: matchingItem.id,
+        userId,
+      });
+      
+      return `Removed '${matchingItem.products?.name || 'Unknown Item'}' from order ${order.id} for chat ${chatId}.`;
     },
   });

@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { InvoiceIcon } from './icons';
+import { InvoiceIcon, TrashIcon } from './icons';
 
 export function ShoppingCart({ order }: { order?: any }) {
   const [open, setOpen] = useState(false);
@@ -25,6 +25,27 @@ export function ShoppingCart({ order }: { order?: any }) {
       return sum + item.price * item.quantity;
     }, 0);
   }, [order?.items]);
+
+  const handleRemoveItem = async (orderItemId: string) => {
+    try {
+      const res = await fetch('/api/order', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderItemId }),
+      });
+      
+      if (!res.ok) throw new Error('Failed to remove item');
+      
+      toast.success('Item removed from order');
+      
+      // Refetch order status to update UI
+      if (order.chat_id) {
+        mutate(`/api/order?chatId=${order.chat_id}`);
+      }
+    } catch (err) {
+      toast.error('Failed to remove item. Please try again.');
+    }
+  };
 
   // Show loading state
   if (!order) {
@@ -70,31 +91,41 @@ export function ShoppingCart({ order }: { order?: any }) {
           <h3 className="font-semibold text-sm">Shopping Cart</h3>
         </div>
         {order.items.map((item: any) => (
-          <DropdownMenuItem
-            key={item.id}
-            className="gap-4 flex flex-row justify-between items-center"
-          >
-            <div className="flex flex-col gap-1 items-start truncate">
+          <div key={item.id} className="flex items-center justify-between gap-2 py-2">
+            <div className="flex flex-col gap-1 items-start truncate flex-1">
               <div className="font-medium">
                 {item.products?.name || 'Unknown Item'}
               </div>
               <div className="text-xs text-muted-foreground">
-                Qty: {item.quantity}
+                Qty: {item.quantity} × ${item.price.toFixed(2)}
               </div>
             </div>
-            <div className="text-xs text-muted-foreground">
-              ${(item.price * item.quantity).toFixed(2)}
+            <div className="flex items-center gap-2">
+              {order.status !== 'submitted' && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleRemoveItem(item.id);
+                  }}
+                >
+                  <TrashIcon size={12} />
+                </Button>
+              )}
             </div>
-          </DropdownMenuItem>
+          </div>
         ))}
-        <DropdownMenuItem className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center py-2 border-t">
           <div className="flex flex-col gap-1 items-start font-bold">
             Subtotal
           </div>
           <div className="text-xs text-muted-foreground font-bold">
             ${subtotal.toFixed(2)}
           </div>
-        </DropdownMenuItem>
+        </div>
         {order.status === 'submitted' ? (
           <div className="flex flex-col gap-2 mt-5">
             <Button className="w-full" variant="outline" disabled>

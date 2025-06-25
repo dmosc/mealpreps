@@ -78,3 +78,61 @@ export async function PATCH(request: Request) {
     return Response.json('An error occurred', { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  const { orderItemId } = await request.json();
+  console.log('DELETE request received for orderItemId:', orderItemId);
+  
+  if (!orderItemId) {
+    return Response.json('Missing orderItemId', { status: 400 });
+  }
+  try {
+    const user = await getSession();
+    console.log('User session:', user?.id);
+    
+    if (!user) {
+      return Response.json('Unauthorized', { status: 401 });
+    }
+    
+    const supabase = await createClient();
+    
+    // First, verify the order item belongs to a user's order
+    console.log('Fetching order item for verification...');
+    const { data: orderItem, error: fetchError } = await supabase
+      .from('order_items')
+      .select(`
+        *,
+        orders!inner(user_id)
+      `)
+      .eq('id', orderItemId)
+      .eq('orders.user_id', user.id)
+      .single();
+    
+    console.log('Order item fetch result:', { orderItem, fetchError });
+    
+    if (fetchError || !orderItem) {
+      return Response.json('Order item not found or unauthorized', { status: 404 });
+    }
+    
+    // Delete the order item
+    console.log('Attempting to delete order item...');
+    const { data, error: deleteError } = await supabase
+      .from('order_items')
+      .delete()
+      .eq('id', orderItemId)
+      .select();
+    
+    console.log('Delete result:', { data, deleteError });
+    
+    if (deleteError) {
+      console.error('Delete error:', deleteError);
+      return Response.json('Failed to remove item from order', { status: 500 });
+    }
+
+    console.log('Item deleted successfully');
+    return Response.json({ success: true });
+  } catch (error) {
+    console.error('Error removing item from order:', error);
+    return Response.json('An error occurred', { status: 500 });
+  }
+}
