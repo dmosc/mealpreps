@@ -8,14 +8,10 @@ export async function getSessionQuery(client: Client) {
     data: { user },
     error,
   } = await client.auth.getUser();
-
   if (error) {
-    throw {
-      message: error.message,
-      status: error.status || 500,
-    } as AuthError;
+    // Return null for auth errors (user not logged in) instead of throwing
+    return null;
   }
-
   return user;
 }
 
