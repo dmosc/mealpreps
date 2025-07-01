@@ -15,7 +15,12 @@ interface StripeCheckoutProps {
   onCancel?: () => void;
 }
 
-export function StripeCheckout({ orderId, chatId, onSuccess, onCancel }: StripeCheckoutProps) {
+export function StripeCheckout({
+  orderId,
+  chatId,
+  onSuccess,
+  onCancel,
+}: StripeCheckoutProps) {
   const { stripe, loading } = useStripe();
   const [isProcessing, setIsProcessing] = useState(false);
   const { mutate } = useSWRConfig();
@@ -69,11 +74,7 @@ export function StripeCheckout({ orderId, chatId, onSuccess, onCancel }: StripeC
   }
 
   return (
-    <Button
-      onClick={handleCheckout}
-      disabled={isProcessing}
-      className="w-full"
-    >
+    <Button onClick={handleCheckout} disabled={isProcessing} className="w-full">
       {isProcessing ? 'Processing...' : 'Pay Now'}
     </Button>
   );

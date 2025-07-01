@@ -8,7 +8,7 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 export async function POST(request: NextRequest) {
   console.log('Webhook received');
-  
+
   const body = await request.text();
   const headersList = await headers();
   const sig = headersList.get('stripe-signature');
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
         const paymentIntent = event.data.object;
         const orderId = paymentIntent.metadata?.orderId;
         console.log('Order ID from payment intent metadata:', orderId);
-        
+
         if (orderId) {
           // Update order status back to submitted if payment fails
           const { error } = await supabase

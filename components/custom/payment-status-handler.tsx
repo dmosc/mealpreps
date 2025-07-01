@@ -27,4 +27,4 @@ export function PaymentStatusHandler({ chatId }: PaymentStatusHandlerProps) {
   }, [searchParams, chatId, mutate]);
 
   return null; // This component doesn't render anything
-} 
+}
