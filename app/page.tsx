@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+import { MealCarousel } from '@/components/custom/meal-carousel';
 import { Button } from '@/components/ui/button';
 
 export default function LandingPage() {
@@ -41,36 +42,37 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative pt-16 pb-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              Meal prepping that&apos;s{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">
-                healthy, convenient & smart.
-              </span>
-            </h1>
-            <p className="mt-6 text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Hyper-personalized meals from all around the world that are made
-              with love, macro & calorie-conscious delivered right at your
-              doorstep.
-            </p>
-            <div className="mt-10 flex justify-center">
-              <Link href="/register">
-                <Button
-                  size="lg"
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg"
-                >
-                  Start eating better
-                  <ArrowRight className="ml-2 size-5" />
-                </Button>
-              </Link>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Text Content */}
+            <div className="text-center lg:text-left">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                Meal prepping that&apos;s{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">
+                  healthy, convenient & smart.
+                </span>
+              </h1>
+              <p className="mt-6 text-xl text-gray-300 leading-relaxed">
+                Hyper-personalized meals from all around the world that are made
+                with love, macro & calorie-conscious delivered right at your
+                doorstep.
+              </p>
+              <div className="mt-10 flex justify-center lg:justify-start">
+                <Link href="/register">
+                  <Button
+                    size="lg"
+                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg"
+                  >
+                    Start eating better
+                    <ArrowRight className="ml-2 size-5" />
+                  </Button>
+                </Link>
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Floating Elements */}
-        <div className="absolute top-32 right-16 hidden lg:block">
-          <div className="size-12 bg-gray-800 rounded-full flex items-center justify-center">
-            <Truck className="size-6 text-blue-400" />
+            
+            {/* Meal Carousel */}
+            <div className="flex justify-center lg:justify-end">
+              <MealCarousel />
+            </div>
           </div>
         </div>
       </section>
